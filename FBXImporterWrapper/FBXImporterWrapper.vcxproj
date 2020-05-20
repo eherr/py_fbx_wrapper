@@ -153,15 +153,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;IOWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\ProgramData\Anaconda3\envs\py35\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)\FBXImporter;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)\Dependencies\glm;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(SolutionDir)Dependencies\fbx_sdk\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\ProgramData\Anaconda3\envs\py36\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)\FBXImporter;$(SolutionDir)Dependencies\fbx_sdk\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\ProgramData\Anaconda3\envs\py35\libs;..\IO;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories);$(SolutionDir)$(Platform)\$(Configuration);$(SolutionDir)Dependencies\fbx_sdk\lib\vs2015\x64\release;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>FBXImporter.lib;glew32.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\ProgramData\Anaconda3\envs\py36\libs;..\IO;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories);$(SolutionDir)$(Platform)\$(Configuration);$(SolutionDir)Dependencies\fbx_sdk\lib\vs2015\x64\release;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FBXImporter.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>D:\ProgramData\Anaconda3\envs\py35\Scripts\cython.exe fbx_importer.pyx --cplus</Command>

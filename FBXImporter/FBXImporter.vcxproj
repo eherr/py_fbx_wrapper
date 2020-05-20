@@ -125,7 +125,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PreprocessorDefinitions>UNICODE;WIN32;WIN64;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_OPENGL_LIB;QT_XML_LIB;IO_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\assimp-3.1.1\include;..\Physics;$(SolutionDir)Dependencies\fbx_sdk\include;%(AdditionalIncludeDirectories);$(SolutionDir)Dependencies\glew-2.1.0\include;..\ode\include;$(SolutionDir)Dependencies\eigen-3.2.7\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;.\GeneratedFiles\$(ConfigurationName);$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\fbx_sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
