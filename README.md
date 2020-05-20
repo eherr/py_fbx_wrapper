@@ -1,7 +1,7 @@
 # py_fbx_wrapper
 Simple Cython wrapper for the FBX SDK to load characters with meshes into a dictionary structure. It was tested using [vis_utils](https://github.com/eherr/vis_utils) with files from [MakeHuman](http://www.makehumancommunity.org/) but might also work with files from other sources.
 
-You need to change path to the python environment in the files FBXWrapper.csproj and FBXImporterWrapper.csproj 
+You need to change path to the python environment in the files FBXWrapper.vcxproj and FBXImporterWrapper.vcxproj 
 
 Additionally the following dependencies are required:
 - [GLM](https://glm.g-truc.net/0.9.9/index.html)
@@ -17,7 +17,7 @@ Cython can then convert fbx_importer.pyx into fbx_importer.cpp which is then com
 <Path to Python Environment>\Scripts\cython.exe fbx_importer.pyx --cplus
 ```
 
-To automate this step, a custom pre-build event is defined in the project file FBXImporterWrapper.csproj for which only the path to the environment needs to be changed.
+To automate this step, a custom pre-build event is defined in the project file FBXImporterWrapper.vcxproj for which only the path to the environment needs to be changed.
 
 Note the module fbx_importer.pyd can only be imported by a python script if libfbxsdk.dll is in the same directory. The projects are only configured for Release|x64 because Python does not come with debug files for Windows.
 

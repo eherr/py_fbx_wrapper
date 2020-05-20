@@ -81,7 +81,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>geom_io</TargetName>
+    <TargetName>fbx_importer</TargetName>
     <TargetExt>.pyd</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -112,19 +112,19 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;IOWRAPPER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\ProgramData\Anaconda3\envs\tensorflow\include;$(SolutionDir)Dependencies\glm;..\Animation;..\GUI;$(SolutionDir)Dependencies\eigen-3.2.7\include;..\IO;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)\Dependencies\glm;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(SolutionDir)\Dependencies\FreeImage;$(SolutionDir)\Dependencies\ft2.6\include;..\Dependencies\fbx_sdk\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\ProgramData\Anaconda3\envs\py36\include;$(SolutionDir)Dependencies\glm;$(SolutionDir)\FBXImporter;$(SolutionDir)Dependencies\fbx_sdk\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\ProgramData\Anaconda3\envs\tensorflow\libs;..\IO;$(SolutionDir)Dependencies\glew-2.1.0\lib\Debug\x64;%(AdditionalLibraryDirectories);$(SolutionDir)$(Platform)\$(Configuration);$(SolutionDir)Dependencies\fbx_sdk\lib\vs2015\x64\debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>IO.lib; Graphics.lib; Animation.lib; glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(SolutionDir)$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>E:\Anaconda3\envs\tensorflow\Scripts\cython.exe geom_io.pyx --cplus</Command>
+      <Command>D:\ProgramData\Anaconda3\envs\py35\Scripts\cython.exe fbx_importer.pyx --cplus</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)$(Platform)\$(Configuration)\geom_io.pyd" "$(SolutionDir)mg-tools\mg_analysis\IO\Geometry\geom_io.pyd"</Command>
+      <Command></Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,7 +160,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\ProgramData\Anaconda3\envs\py36\libs;..\IO;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories);$(SolutionDir)$(Platform)\$(Configuration);$(SolutionDir)Dependencies\fbx_sdk\lib\vs2015\x64\release;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\ProgramData\Anaconda3\envs\py36\libs;$(SolutionDir)Dependencies\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories);$(SolutionDir)$(Platform)\$(Configuration);$(SolutionDir)Dependencies\fbx_sdk\lib\vs2015\x64\release;</AdditionalLibraryDirectories>
       <AdditionalDependencies>FBXImporter.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
