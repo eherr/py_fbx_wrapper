@@ -19,7 +19,7 @@ Cython can then convert fbx_importer.pyx into fbx_importer.cpp which is then com
 
 To automate this step, a custom pre-build event is defined in the project file FBXImporterWrapper.csproj for which only the path to the environment needs to be changed.
 
-Note the module fbx_importer.pyd can only be imported by a python script if libfbxsdk.dll is in the same directory.
+Note the module fbx_importer.pyd can only be imported by a python script if libfbxsdk.dll is in the same directory. The projects are only configured for Release|x64 because Python does not come with debug files for Windows.
 
 ```bat
 import fbx_importer

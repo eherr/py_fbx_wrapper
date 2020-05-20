@@ -33,7 +33,6 @@ https://www.gamedev.net/articles/programming/graphics/how-to-work-with-fbx-sdk-r
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/quaternion.hpp> 
 #include <glm/gtx/quaternion.hpp>
-#include <GL\glew.h>
 #include "fbx_geometry_loader.h"
 #include <algorithm>
 #include <iostream>
@@ -173,9 +172,9 @@ GeometryData* FBXGeometryLoader::createGeometryDataFromMesh(FbxMesh* pMesh, bool
 	}
     geometryData->nPolyVertices = countPolyVerts;
 	if (countPolyVerts == 3)
-		geometryData->drawMode = GL_TRIANGLES;
+		geometryData->drawMode = 3;
 	else
-		geometryData->drawMode = GL_QUADS;
+		geometryData->drawMode = 4;
 	success = true;
 	return geometryData;
 }
@@ -274,7 +273,7 @@ GeometryData* FBXGeometryLoader::createColoredGeometryDataFromMesh(FbxMesh* pMes
 	}
 
 	geometryData->shaderName = "color";
-	geometryData->drawMode = GL_TRIANGLES;
+	geometryData->drawMode = 3;
 	Color color = Color(1, 0, 0, 1);
 	for (unsigned short i = 0; i < geometryData->vertices.size(); i++){
 		geometryData->colors.push_back(color);

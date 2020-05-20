@@ -22,7 +22,6 @@
 * USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "geometry_data.h"
-#include <GL\glew.h>
 
 GeometryData::GeometryData(){
 	vertices = std::vector<Vertex>();
@@ -34,7 +33,6 @@ GeometryData::GeometryData(){
     skeleton = NULL;
 	indices = std::vector<unsigned short>();
 	shaderName = "color";
-	drawMode = GL_LINES;
 	
 }
 
