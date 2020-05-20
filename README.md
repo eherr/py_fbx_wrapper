@@ -5,7 +5,7 @@ You need to change path to the python environment in the files FBXWrapper.csproj
 
 Additionally the following dependencies are required:
 - [GLM](https://glm.g-truc.net/0.9.9/index.html)
-- [FBX SDK](https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0 (It was tested with version 2017)
+- [FBX SDK](https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0) (It was tested with version 2017)
 
 To generate the C++ wrapper from fbx_importer.pyx, [Cython](https://cython.org/) needs to be installed 
 ```bat
