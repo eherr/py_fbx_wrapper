@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{7a831eda-8f0b-415a-8585-2f64048b1e18}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{76529d9e-ed0a-45e5-bcec-99dc839b54d9}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4d03a2e3-59f0-4e7d-8e6e-a0706b7f1cf1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="fbx_geometry_loader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry_data.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="skeleton.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="joint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="fbx_geometry_loader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry_data.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="joint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="joint_frames.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="graphic_types.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
