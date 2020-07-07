@@ -81,6 +81,17 @@ cdef extern from "joint.h":
         mat4 invBindPose
         vector[Joint*] children
 
+cdef extern from "joint_frames.h":
+    cdef struct JointFrames:
+        vector[vec3] localTranslation
+        vector[vec3] localEulerAngles
+        vector[string] channels
+        vector[quat] localQuaternions
+
+    cdef struct JointFramesMap:
+        map[string, JointFrames] frames
+        float frameTime
+
 cdef extern from "skeleton.h":
     cdef cppclass Skeleton:
         Skeleton() except +
@@ -136,6 +147,7 @@ cdef extern from "geometry_data.h":
         GeometryDataList() except +
         vector[GeometryData*] meshList
         Skeleton* skeleton
+        map[string, JointFramesMap] animations
 
 cdef extern from "fbx_geometry_loader.h":
     cdef cppclass FBXGeometryLoader:
@@ -151,7 +163,6 @@ cdef mat4_to_numpy(mat4& m):
 
 cdef convert_joint_to_dict(Joint* j):
     joint_dict = dict()
-
     if j.index == 0:
         joint_dict["node_type"] = 0 # root
         joint_dict["channels"] = ["Xposition", "Yposition", "Zposition", "Xrotation", "Yrotation", "Zrotation"]
@@ -239,17 +250,48 @@ cdef convert_mesh_data_to_dict(GeometryData*& data):
                   [data.jointWeights.at(j).Weights[0], data.jointWeights.at(j).Weights[1], data.jointWeights.at(j).Weights[2], data.jointWeights.at(j).Weights[3]] )
         mesh_data["weights"].append(entry)
     return mesh_data
-    
+
+cdef convert_joint_frames_to_list(JointFrames& joinFrames):
+    frames = list()
+    for i in range(joinFrames.localTranslation.size()):
+        frame = dict()
+        tx = joinFrames.localTranslation[i].x
+        ty = joinFrames.localTranslation[i].y
+        tz = joinFrames.localTranslation[i].z
+        frame["local_translation"] = [tx, ty, tz]
+        qx = joinFrames.localQuaternions[i].x
+        qy = joinFrames.localQuaternions[i].y
+        qz = joinFrames.localQuaternions[i].z
+        qw = joinFrames.localQuaternions[i].w
+        frame["local_rotation"] = [qw, qx, qy, qz]
+        frames.append(frame)
+    return frames
+
+cdef convert_animation_to_dict(JointFramesMap& jointFramesMap):
+    animation = dict()
+    animation["curves"] = dict()
+    animation["frame_time"] = jointFramesMap.frameTime
+    cdef map[string, JointFrames].iterator it = jointFramesMap.frames.begin()
+    while it != jointFramesMap.frames.end():
+        name = deref(it).first.decode("utf-8")
+        animation["curves"][name] = convert_joint_frames_to_list(deref(it).second)
+        inc(it)
+    return animation
 
 cdef convert_mesh_data_list_to_dict(GeometryDataList* data_list):
-    mesh_data = dict()
-    pylist = list()
+    mesh_list = list()
     for i in range(data_list.meshList.size()):
         mesh_data = convert_mesh_data_to_dict(data_list.meshList.at(i))
-        pylist.append(mesh_data)
+        mesh_list.append(mesh_data)
     
     mesh_data["skeleton"] = convert_skeleton_to_dict(data_list)
-    mesh_data["mesh_list"] = pylist
+    mesh_data["mesh_list"] = mesh_list
+    mesh_data["animations"] = dict()
+    cdef map[string, JointFramesMap].iterator it = data_list.animations.begin()
+    while it != data_list.animations.end():
+        name = deref(it).first.decode("utf-8")
+        mesh_data["animations"][name] = convert_animation_to_dict(deref(it).second)
+        inc(it)
     return mesh_data
 
 def load_fbx_file(filename):
@@ -257,5 +299,7 @@ def load_fbx_file(filename):
     cdef GeometryDataList* data = new GeometryDataList()
     cdef FBXGeometryLoader* loader = new FBXGeometryLoader()
     cdef bool success = loader.loadGeometryDataFromFile(f, data)
+    del data
+    del loader
     if success:
-        return(convert_mesh_data_list_to_dict(data))
+        return convert_mesh_data_list_to_dict(data)

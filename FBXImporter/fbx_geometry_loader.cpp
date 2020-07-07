@@ -36,6 +36,7 @@ https://www.gamedev.net/articles/programming/graphics/how-to-work-with-fbx-sdk-r
 #include "fbx_geometry_loader.h"
 #include <algorithm>
 #include <iostream>
+#include <queue>
 
 using namespace fbxsdk;
 
@@ -293,9 +294,10 @@ void convertToOpenGLCoordinateSystem(FbxAMatrix& input){
 }
 
 
-bool FBXGeometryLoader::extractAnimations(FbxNode* node, GeometryDataList* geometryData){
+bool FBXGeometryLoader::extractAnimations(GeometryDataList* geometryData){
 	//https://github.com/gameplay3d/GamePlay/blob/master/tools/encoder/src/FBXSceneEncoder.cpp
 	//http://oddeffects.blogspot.de/2013/10/fbx-sdk-tips.html
+	//https://gamedev.stackexchange.com/questions/59419/how-can-i-import-fbx-animations-using-the-fbx-sdk
 	for (int i = 0; i < fbxScene->GetSrcObjectCount<FbxAnimStack>(); i++){
 		FbxAnimStack* currAnimStack = fbxScene->GetSrcObject<FbxAnimStack>(i); 
 		fbxScene->SetCurrentAnimationStack(currAnimStack);
@@ -304,43 +306,53 @@ bool FBXGeometryLoader::extractAnimations(FbxNode* node, GeometryDataList* geome
 		FbxTakeInfo* takeInfo = fbxScene->GetTakeInfo(animStackName);
 		FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
 		FbxTime end = takeInfo->mLocalTimeSpan.GetStop();
-		int numFrames = end.GetFrameCount(FbxTime::eFrames24) - start.GetFrameCount(FbxTime::eFrames24) + 1;
-		geometryData->animations[animationName] = JointFramesMap();
-		float duration = end.GetSecondCount() - start.GetSecondCount();
-		geometryData->animations[animationName].frameTime = duration / numFrames;
-		//prepare joint frame map
-		for (auto it = geometryData->skeleton->joints.begin(); it != geometryData->skeleton->joints.end(); it++){
-			geometryData->animations[animationName].frames[it->first] = JointFrames();
-		}
-		//fill joint frame map
-		/*unsigned int numOfClusters = currSkin->GetClusterCount();
-		for (int clusterIndex = 0; clusterIndex <numOfClusters; clusterIndex++){
-			FbxCluster* currCluster = currSkin->GetCluster(clusterIndex);
-			std::string name = currCluster->GetLink()->GetName();
-			if (geometryData->animations[animationName].frames.find(name) != geometryData->animations[animationName].frames.end()){
-				//if (name == skeleton->root)
-				//geometryData->animations[animationName].frames[name].channels = { "Xtranslation", "Ytranslation", "Ztranslation", "Xrotation", "Yrotation", "Zrotation" };
-				//else
-				//	geometryData->animations[animationName].frames[name].channels = {  "Xrotation", "Yrotation", "Zrotation" };
-				FbxTime currTime;
-				for (FbxLongLong i = start.GetFrameCount(FbxTime::eFrames24); i <= end.GetFrameCount(FbxTime::eFrames24); ++i)
-				{
-					//http://forums.autodesk.com/t5/fbx-sdk/what-am-i-doing-with-animation/td-p/4249593
-					currTime.SetFrame(i, FbxTime::eFrames24);
-					FbxAMatrix localTransform = currCluster->GetLink()->EvaluateLocalTransform(currTime);
-					//convertToOpenGLCoordinateSystem(localTransform);
-					FbxQuaternion q = localTransform.GetQ();
-					//FbxVector4 localEulerAngles = localTransform.GetR();
-					FbxVector4 localTranslation = localTransform.GetT();
-					//FbxVector4 localEulerAngles = currCluster->GetLink()->EvaluateLocalRotation(currTime);
-					//FbxVector4 localTranslation = currCluster->GetLink()->EvaluateLocalTranslation(currTime);
+		int numLayers = currAnimStack->GetMemberCount<FbxAnimLayer>();
 
-					//geometryData->animations[animationName].frames[name].localEulerAngles.push_back(glm::vec3(localEulerAngles[0], localEulerAngles[1], localEulerAngles[2]));
-					geometryData->animations[animationName].frames[name].localTranslation.push_back(glm::vec3(localTranslation[0], localTranslation[1], localTranslation[2]));
-					geometryData->animations[animationName].frames[name].localQuaternions.push_back(glm::quat(q[3], q[0], q[1], q[2]));
+		for (int j = 0; j < numLayers; ++j)
+		{
+			FbxAnimLayer* lAnimLayer = currAnimStack->GetMember<FbxAnimLayer>(j);
+			FbxString layerName = lAnimLayer->GetName();
+			std::string animName = animationName + animStackName.Buffer();
+			geometryData->animations[animName] = JointFramesMap();
+			FbxNode* tempNode = fbxScene->GetRootNode();
+			std::queue<FbxNode*> nodeQueue;
+			std::string nodeName;
+			while (tempNode != NULL)
+			{
+				//check an animation curve exists
+				FbxAnimCurve* tAnimCurve = tempNode->LclTranslation.GetCurve(lAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+				FbxAnimCurve* rAnimCurve = tempNode->LclRotation.GetCurve(lAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+				
+				if (tAnimCurve != NULL || rAnimCurve != NULL)
+				{
+					continue;
+				}
+				nodeName = ((FbxString)tempNode->GetName()).Buffer();
+				//check if node name already exists
+				if(geometryData->animations[animName].frames.find(nodeName) != geometryData->animations[animName].frames.end()) {
+					continue;
+				}
+				geometryData->animations[animName].frames[nodeName] = JointFrames();
+				auto currentT = FbxTime();
+				for (int frameIdx = start.GetFrameCount(FbxTime::eFrames24); frameIdx < end.GetFrameCount(FbxTime::eFrames24); frameIdx++) {
+					currentT.SetFrame(frameIdx, FbxTime::eFrames24);
+					auto localTransform = tempNode->EvaluateLocalTransform(currentT);
+					auto q = localTransform.GetQ();
+					auto t = localTransform.GetT();
+					geometryData->animations[animName].frames[nodeName].localTranslation.push_back(glm::vec3(t[0], t[1], t[2]));
+					geometryData->animations[animName].frames[nodeName].localQuaternions.push_back(glm::quat(q[3], q[0], q[1], q[2]));
+				}
+				for (int i = 0; i < tempNode->GetChildCount(); i++) {
+					nodeQueue.push(tempNode->GetChild(i));
+				}
+				if (nodeQueue.size() > 0) {
+					tempNode = nodeQueue.front();
+					nodeQueue.pop();
+				} else {
+					tempNode = NULL;
 				}
 			}
-		}*/
+		}
 	}
 	return true;
 }
@@ -568,7 +580,7 @@ bool FBXGeometryLoader::loadGeometryDataFromFile(const char* path, GeometryDataL
     extractSkeletonFromNode(root, geometryDataList, 0);
     std::cout << "loaded skeleton" <<geometryDataList->skeleton->joints.size() << std::endl;
     extractMeshListFromNode(root, geometryDataList, 0);
-    //extractAnimations(root, geometryDataList );
+    extractAnimations(geometryDataList);
 
 	// Destroy all objects created by the FBX SDK.
 	if (lSdkManager) lSdkManager->Destroy();

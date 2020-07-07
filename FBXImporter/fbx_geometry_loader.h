@@ -32,7 +32,7 @@ class FBXGeometryLoader{
 		~FBXGeometryLoader();
 		bool loadGeometryDataFromFile(const char* path, GeometryDataList* geometryDataList);
 	private:
-		bool extractAnimations(fbxsdk::FbxNode* pNode, GeometryDataList* geometryData);
+		bool extractAnimations(GeometryDataList* geometryData);
 		bool extractSkeletonWeightsFromMeshNode(FbxMesh* mesh, GeometryData* geometryData);
 		void extractTextureNamesFromNode(fbxsdk::FbxNode* pNode, std::vector<std::string>& textureFileNames);
 		GeometryData* createGeometryDataFromMesh(fbxsdk::FbxMesh* pMesh,  bool& success);
