@@ -293,7 +293,8 @@ cdef convert_mesh_data_list_to_dict(GeometryDataList* data_list):
     cdef map[string, JointFramesMap].iterator it = data_list.animations.begin()
     while it != data_list.animations.end():
         name = deref(it).first.decode("utf-8")
-        mesh_data["animations"][name] = convert_animation_to_dict(deref(it).second)
+        if deref(it).second.frames.size() > 0:
+            mesh_data["animations"][name] = convert_animation_to_dict(deref(it).second)
         inc(it)
     return mesh_data
 

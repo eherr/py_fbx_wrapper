@@ -330,7 +330,7 @@ bool FBXGeometryLoader::extractAnimations(GeometryDataList* geometryData){
 				bool rotation = tempNode->LclRotation.IsAnimated(lAnimLayer);
 				if (translation || rotation) {
 
-					std::cout << " check if " << nodeName << "exists " << std::endl;
+					//std::cout << " check if " << nodeName << "exists " << std::endl;
 					nodeName = tempNode->GetName();
 					//check if node name already exists
 					if (geometryData->animations[animKey].frames.find(nodeName) != geometryData->animations[animKey].frames.end()) {
