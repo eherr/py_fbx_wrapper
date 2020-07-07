@@ -21,6 +21,7 @@
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # distutils: language = c++
+
 from libcpp cimport bool
 import numpy as np
 from libcpp.map cimport map
@@ -279,13 +280,15 @@ cdef convert_animation_to_dict(JointFramesMap& jointFramesMap):
     return animation
 
 cdef convert_mesh_data_list_to_dict(GeometryDataList* data_list):
+    mesh_data = dict()
     mesh_list = list()
     for i in range(data_list.meshList.size()):
-        mesh_data = convert_mesh_data_to_dict(data_list.meshList.at(i))
-        mesh_list.append(mesh_data)
+        mesh = convert_mesh_data_to_dict(data_list.meshList.at(i))
+        mesh_list.append(mesh)
     
     mesh_data["skeleton"] = convert_skeleton_to_dict(data_list)
     mesh_data["mesh_list"] = mesh_list
+    print("mesh_list", len(mesh_list), data_list.meshList.size())
     mesh_data["animations"] = dict()
     cdef map[string, JointFramesMap].iterator it = data_list.animations.begin()
     while it != data_list.animations.end():
@@ -299,7 +302,7 @@ def load_fbx_file(filename):
     cdef GeometryDataList* data = new GeometryDataList()
     cdef FBXGeometryLoader* loader = new FBXGeometryLoader()
     cdef bool success = loader.loadGeometryDataFromFile(f, data)
-    del data
-    del loader
+    #del data
+    #del loader
     if success:
         return convert_mesh_data_list_to_dict(data)
