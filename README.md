@@ -27,7 +27,7 @@ import fbx_importer
 data = fbx_importer.load_fbx_file(filename)
 
 ```
-Data contains a "skeleton" and a "mesh_list" with vertices, normals, uvs, bone ids and weights.
+Data contains a "skeleton", "animations" and a "mesh_list". Each entry of the mesh list contains with vertices, normals, uvs, bone ids and weights. Each animation contains a "curves" dict that stores the joint names as keys and a list of frames with "local_translation" and "local_rotation" as keys.
  
 ## License
 Copyright (c) 2019 DFKI GmbH.  
